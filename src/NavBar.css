@@ -1,0 +1,21 @@
+nav{
+    width: 100%;
+    background: black;
+    height: 30px;
+    position: fixed;
+    top: 0;
+    padding: 5px;
+    z-index: 10000;
+    align-items: center;
+    text-align: center;
+
+}
+.main-links{
+    color: white;
+    background: black;
+    text-decoration: none;
+    font-size: 14px;
+}
+.nav-bar .active{
+    font-weight: bold;
+}

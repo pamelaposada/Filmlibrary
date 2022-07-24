@@ -1,29 +1,61 @@
 import './FilmDetail.css'
+import { TMDB_API_KEY, TMDB} from "./TMDB"
+import {useEffect, useRef, useState} from 'react'
+import {useParams } from "react-router-dom"
 
 function FilmDetail(props) {
-  
-  // console.log(props.selectedFilm)
-  if(!props.passSelectedFilm){
-    return FilmDetailEmpty()
-  }
-  
+  const data = TMDB;
+  const APIKey = TMDB_API_KEY
+  const [movie, setMovie] = useState(data.films)
+  const countRenders = useRef(0)
 
-  return (
+  const params = useParams()
+
+  useEffect(() => {
+    // count the number of renders
+    countRenders.current = countRenders.current + 1
+    
+    const fetchMovies = async() => {
+      try{
+          const url = `https://api.themoviedb.org/3/movie/${params.filmId}?api_key=${APIKey}`
+    
+          const response = await fetch(url)
+          if(response.ok){
+            const data = await response.json();
+            setMovie(data)
+          }else{
+            console.log('Invalid url')
+          } 
+      }
+      catch(error) {
+        console.log('error: ', error)
+      }
+    }
+    // fix first render error
+    fetchMovies()
    
-    <div className="FilmDetail is-hydrated">
-      <figure className="film-backdrop">
-        <img src={`https://image.tmdb.org/t/p/w1280/${props.passSelectedFilm.backdrop_path}`} alt={props.passSelectedFilm.title} />
-        <h1 className="film-title">{props.passSelectedFilm.title}</h1>
-      </figure>
+  }, [APIKey, params.filmId])
 
-      <div className="film-meta">
-        <p className="film-detail-overview">
-          <img src={`https://image.tmdb.org/t/p/w780/${props.passSelectedFilm.poster_path}`} className="film-detail-poster" alt={`poster${props.passSelectedFilm.title}`} />
-          {props.passSelectedFilm.overview}
-        </p>
+  // show empty fildetail when there is not selection.
+  if(Object.keys(params).length === 0){
+    return <FilmDetailEmpty/>
+  } 
+
+    return (
+      <div className="FilmDetail is-hydrated">
+        <figure className="film-backdrop">
+          <img src={`https://image.tmdb.org/t/p/w1280/${movie.backdrop_path}`} alt={movie.title} />
+          <h1 className="film-title">{movie.title}</h1>
+        </figure>
+        <div className="film-meta">
+          <h2>{movie.tagline}</h2>
+          <p className="film-detail-overview">
+            <img src={`https://image.tmdb.org/t/p/w780/${movie.poster_path}`} className="film-detail-poster" alt={`poster${movie.title}`} />
+            {movie.overview}
+          </p>
+        </div>
       </div>
-    </div>
-  )
+    )
 }
 
 function FilmDetailEmpty() {
@@ -33,9 +65,7 @@ function FilmDetailEmpty() {
       <i className="material-icons">subscriptions</i>
       <span>No film selected</span>
     </p>
-
-  </div>
-  )
+  </div>)
 }
 
 export default FilmDetail

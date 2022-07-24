@@ -1,21 +1,36 @@
 import './FilmRow.css'
-import React, { useState} from 'react'
+import { Link} from "react-router-dom"
 
 const FilmRow = (props)=> {
-    const [ToggleBtn, setToggleBtn] = useState(false)
+    
+    const isFavorite = props.isFavorite;
   
     return(
         <div>
-            
-        <div className="FilmRow" onClick={()=>props.onFilmDetailSelected(props.datavalue)}>
+          
+        <div className="FilmRow" >
+        {/* onClick={()=>props.onFilmDetailSelected(props.id)}> */}
             <img src={`https://image.tmdb.org/t/p/w780/${props.posterpath}`} alt={props.alt} />
             <div className="film-summary">
                 <h3>{props.title}</h3>
-                <p>{(new Date(props.year)).getFullYear()}</p>
+                <p>{(new Date(props.year)).getFullYear()}</p>   
+                <Link to={`/films/${props.id}`} className="action"> 
+                    <span className="material-icons">read_more</span>
+                </Link>             
             </div>
-            <button className="fave" onClick={()=>props.onAddFavList(props.datavalue, setToggleBtn(!ToggleBtn))}
-            ><span className="material-icons">{!ToggleBtn ? 'add_to_queue' : 'remove_from_queue'}</span></button>
+            
+        
+            <button className="fave" onClick={(e)=> {
+                e.stopPropagation()
+                if (isFavorite) {
+                    props.onRemoveFavList(props.id);
+                } else {
+                    props.onAddFavList(props.id)
+                }
+            }}
+            ><span className="material-icons">{!isFavorite ? 'add_to_queue' : 'remove_from_queue'}</span></button>
         </div>
+        
     </div>
     )
 }

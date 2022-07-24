@@ -34,7 +34,7 @@
   .FilmRow .fave:hover {
     background-color: lightseagreen;
     height: 34px;
-    width: 28%;
+    width: 15%;
   }
   
   .FilmRow .fave:active {

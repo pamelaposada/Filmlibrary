@@ -33,3 +33,7 @@ img {
 figure {
   margin: 0;
 }
+a{
+  text-decoration: none;
+  color: rgb(33, 40, 40);
+}

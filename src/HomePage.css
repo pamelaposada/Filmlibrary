@@ -1,0 +1,14 @@
+
+.home-main{
+    background: #fff;
+    display: block;
+    text-align: center;
+    height: 100vh;
+    margin-top: 30px;
+    padding-top: 50px;
+
+}
+.movie-photo{
+    width: 50%;
+    margin: auto;
+}

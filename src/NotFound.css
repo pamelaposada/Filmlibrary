@@ -1,0 +1,11 @@
+.notfound-main{
+    margin-top: 30px;
+    padding-top: 50px;
+    text-align: center;
+    background: #fff;
+    height: 100vh;
+}
+.notfound-photo{
+    width: 25%;
+    margin: auto;
+}

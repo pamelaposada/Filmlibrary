@@ -1,84 +1,108 @@
 import FilmDetail from "./FilmDetail";
 import FilmRow from "./FilmRow";
-import React, { useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import {useParams} from "react-router-dom"
 
 import './FilmLibrary.css'
 import './FilmRow.css'
-import {TMDB} from "./TMDB"
+import {TMDB, TMDB_API_KEY} from "./TMDB"
 
 
 function FilmLibrary(props) {
-  const data = TMDB  
+    const data = TMDB; 
+    const APIKey = TMDB_API_KEY
 
-  const [selectedFilm, setSelectedFilm] = useState(null)
-  const[Movilist, setMovilist] = useState([...data.films])
-  const[favorites, setFavorites] = useState([])
+    const [selectedFilm, setSelectedFilm] = useState(null); 
+    const [favorites, setFavorites] = useState([]); 
+    const [tab, setTab]= useState('all') //all | favs
+    const [sortedMovie, setSortedMovie] = useState (data.films)
     
-  // console.log(props.datavalue.id)
-  
-  const handleFavAddClick = (datavalue, btnChange) => {
-
-    // favorites.push(datavalue)
-
-    // If the favorites have a duplicate
-    const isrepeated = favorites.some((item, index) => index !== favorites.indexOf(item))
-    console.log(isrepeated)
-
-      // If favorite is duplicated, then set set new favoriteList without duplicates
-    const FindDuplicates = (array) => array.filter((item, index)=> array.indexOf(item) !== index)
-
-    const duplicateEl = FindDuplicates(favorites)
-
-    if(duplicateEl.length > 0){
-      const newFavoriteList = favorites.filter(
-        (item)=> item.id !== datavalue.id
-      )
-      setFavorites(newFavoriteList)
-    }else{
-       // Add to favorites
-    const newFavorites = [...favorites, datavalue]
-    setFavorites(newFavorites)
-    }
+    // movilist equal to all or favs
+    const movilist = tab === 'all'
+      ? sortedMovie 
+      : sortedMovie.filter(film => favorites.includes(film.id)) 
     
-    console.log(duplicateEl)
+      const paramas = useParams()      
+
+    useEffect(()=> {
+      const sendParamsMovie = ()=> {
+        const findMovie = sortedMovie.find((movie) => movie.id === paramas.filmId)
+        setSelectedFilm(findMovie)
+      }
+      sendParamsMovie()
+    },[paramas.filmId, sortedMovie])
+      
+
+
+    function handleFavAddClick(id) {
+    const newFavorites = [...favorites, id];
+    setFavorites(newFavorites);
   }
-  useEffect(()=> {
-    console.log(favorites)
-  })
 
+    const handleFavRemoveClick = (id) => {
+      const newFavorites = favorites.filter(fav => fav !== id);
+      setFavorites(newFavorites);
+    }
+
+    const handleTab = (e) => {
+        const btnName = e.currentTarget.value
+        setTab(btnName);
+    }
+
+    useEffect(()=> {
+      const fetchSortedMovies = async () => {
+        try{
+          const url = `https://api.themoviedb.org/3/discover/movie?api_key=${APIKey}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_year=2022`
+
+          const response = await fetch(url)
+          const data = await response.json();
+          setSortedMovie(data.results)
+        }
+        catch(err){
+          console.log(err)
+          throw err; 
+        }
+      }
+      fetchSortedMovies()
+    }, [])
+     
+    const selectedFilmItem = sortedMovie.find(film => film.id === selectedFilm)
+
+    
   return (
     <div className="FilmLibrary">
       <div className="film-list">
         <h1 className="section-title">FILMS</h1>
         <div className="film-list-filters">
-          <button className="film-list-filter is-active" >
+          <button className={tab === 'all'? 'film-list-filter is-active': 'film-list-filter'} onClick={handleTab} value='all'>
             ALL
-            <span className="section-count">{data.films.length}</span>
+            <span className="section-count">{sortedMovie.length}</span>
           </button>
-          <button className="film-list-filter" >
+          <button className={tab === 'faves'? 'film-list-filter is-active': 'film-list-filter'} onClick={handleTab} value='faves'>
             FAVES
             <span className="section-count">{favorites.length}</span>
           </button>
         </div>
 
-        {Movilist.map((item) => (
+        {movilist.map((item) => (
           <FilmRow 
             title={item.title} 
             year={item.release_date} 
             posterpath={item.poster_path} 
             alt={item.tile} 
-            key={item.id} 
-            onFilmDetailSelected={setSelectedFilm} 
-            datavalue={item}
-            onAddFavList= {handleFavAddClick}
-           
+            key={item.id}
+            id={item.id}
+            // onFilmDetailSelected={setSelectedFilm} 
+            onAddFavList={handleFavAddClick}
+            onRemoveFavList={handleFavRemoveClick}
+            isFavorite={favorites.includes(item.id)}
            />
         ))}
 
       </div>
       <div className="film-details">
         <h1 className="section-title">DETAILS</h1>
-        <FilmDetail passSelectedFilm={selectedFilm}/>
+        <FilmDetail passSelectedFilm={selectedFilmItem}/>
       </div>
     </div>
     
