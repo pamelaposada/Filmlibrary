@@ -2,7 +2,7 @@
 
 <h3>Project Description</h3>
 
-Small React movie library application.
+Small React application that creates a movie library by fetching data from an API.
 
 <h3>Project Features </h3>
 
