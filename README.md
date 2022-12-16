@@ -2,7 +2,7 @@
 
 <h3>Project Description</h3>
 
-Small movie library application developed using React JS.
+Small React movie library application.
 
 <h3>Project Features </h3>
 
