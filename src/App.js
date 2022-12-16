@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import HomePage from "./HomePage";
-import FilmLibrary from './FilmLibrary';
+import FilmLibrary from './components/FilmLibrary';
 import NavBar from "./NavBar";
 import NotFound from "./NotFound";
 

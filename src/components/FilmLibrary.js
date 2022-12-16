@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom"
 
 import './FilmLibrary.css'
 import './FilmRow.css'
-import {TMDB, TMDB_API_KEY} from "./TMDB"
+import {TMDB, TMDB_API_KEY} from "../TMDB"
 
 
 function FilmLibrary(props) {
@@ -92,7 +92,6 @@ function FilmLibrary(props) {
             alt={item.tile} 
             key={item.id}
             id={item.id}
-            // onFilmDetailSelected={setSelectedFilm} 
             onAddFavList={handleFavAddClick}
             onRemoveFavList={handleFavRemoveClick}
             isFavorite={favorites.includes(item.id)}

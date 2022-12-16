@@ -1,5 +1,5 @@
 import './FilmDetail.css'
-import { TMDB_API_KEY, TMDB} from "./TMDB"
+import { TMDB_API_KEY, TMDB} from "../TMDB"
 import {useEffect, useRef, useState} from 'react'
 import {useParams } from "react-router-dom"
 
